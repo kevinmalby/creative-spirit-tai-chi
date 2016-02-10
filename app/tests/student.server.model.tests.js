@@ -29,35 +29,35 @@ describe('Student Model Unit Tests:', () => {
 
 	describe('Testing the save method', () => {
 		it('Should be able to save without problems', () => {
-			instructor.save((err) => {
+			student.save((err) => {
 				should.not.exist(err);
 			});
 		});
 
 		it('Should not save without a first name', () => {
-			instructor.firstName = '';
-			instructor.save((err) => {
+			student.firstName = '';
+			student.save((err) => {
 				should.exist(err);
 			});
 		});
 
 		it('Should not save without a last name', () => {
-			instructor.lastName = '';
-			instructor.save((err) => {
+			student.lastName = '';
+			student.save((err) => {
 				should.exist(err);
 			});
 		});
 
 		it('Should not save with an invalid email address', () => {
-			instructor.email = 'sdhjaskdha@ dfhjsd soo';
-			instructor.save((err) => {
+			student.email = 'sdhjaskdha';
+			student.save((err) => {
 				should.exist(err);
 			});
 		});
 
 		it('Should not save with an invalid phone number', () => {
-			instructor.email = '9222-2094';
-			instructor.save((err) => {
+			student.email = '9222-2094';
+			student.save((err) => {
 				should.exist(err);
 			});
 		});
@@ -65,20 +65,20 @@ describe('Student Model Unit Tests:', () => {
 
 	describe('Testing the virtual fields', () => {
 		it('Should be able to get the full name', () => {
-			(instructor.fullName).should.equal('Robin Malby');
+			(student.fullName).should.equal('Kevin Malby');
 		});
 
 		it('Should be able to set first and last name with full name', () => {
-			instructor.fullName = 'George Foreman';
-			(instructor.firstName).should.equal('George');
-			(instructor.lastName).should.equal('Foreman');
+			student.fullName = 'George Foreman';
+			(student.firstName).should.equal('George');
+			(student.lastName).should.equal('Foreman');
 		});
 	});
 
 	describe('Testing retrieval', () => {
 		it('Should be able to retrieve an instructor entry', () => {
-			instructor.save();
-			Instructor.findOne({}, (err) => {
+			student.save();
+			Student.findOne({}, (err) => {
 				should.not.exist(err);
 			});
 		});

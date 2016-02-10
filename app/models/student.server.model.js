@@ -40,11 +40,11 @@ let StudentSchema = new schema({
 	state: String,
 	zip: Number,
 	certifications: [String],
-	paid: [Schema.Types.Mixed],
-	registeredFor: [Schema.Types.Mixed],
-	educationUnits: [Schema.Types.Mixed],
-	workshopsEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Workshop' }],
-	classesEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Class' }]
+	paid: [schema.Types.Mixed],
+	registeredFor: [schema.Types.Mixed],
+	educationUnits: [schema.Types.Mixed],
+	workshopsEnrolled: [{ type: schema.Types.ObjectId, ref: 'Workshop' }],
+	classesEnrolled: [{ type: schema.Types.ObjectId, ref: 'Class' }]
 });
 
 StudentSchema.virtual('fullName').get(function() {
