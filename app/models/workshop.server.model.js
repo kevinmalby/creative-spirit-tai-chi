@@ -33,8 +33,8 @@ let WorkshopSchema = new schema({
 	city: String,
 	state: String,
 	zip: Number,
-	instructors: [{ type: Schema.Types.ObjectId, ref: 'Instructor' }],
-	registeredStudents: [{ type: Schema.Types.ObjectId, ref: 'Student' }]
+	instructors: { type: schema.Types.ObjectId, ref: 'Instructor' },
+	registeredStudents: [{ type: schema.Types.ObjectId, ref: 'Student' }]
 });
 
 

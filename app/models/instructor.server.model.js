@@ -2,7 +2,7 @@
 
 let mongoose = require('mongoose'),
 	schema = mongoose.Schema,
-	phoneUtil = require('google-libphonenumber').phoneUtil;
+	validator = require('validator');
 
 let InstructorSchema = new schema({
 	firstName: {
@@ -28,7 +28,7 @@ let InstructorSchema = new schema({
 		type: String,
 		validate: [
 			function(phoneNumber) {
-				return phoneUtil.isValidPhoneNumber(phoneNumber, 'US');
+				return validator.isMobilePhone(phoneNumber, 'en-US');
 			}, 'Not a valid phone number'
 		]
 	},

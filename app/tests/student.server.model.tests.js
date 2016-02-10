@@ -76,7 +76,7 @@ describe('Student Model Unit Tests:', () => {
 	});
 
 	describe('Testing retrieval', () => {
-		it('Should be able to retrieve an instructor entry', () => {
+		it('Should be able to retrieve an student entry', () => {
 			student.save();
 			Student.findOne({}, (err) => {
 				should.not.exist(err);

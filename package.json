@@ -21,8 +21,8 @@
   "dependencies": {
     "ejs": "^2.3.4",
     "express": "^4.13.3",
-    "google-libphonenumber": "^1.0.12",
-    "mongoose": "^4.3.6"
+    "mongoose": "^4.3.6",
+    "validator": "^4.7.1"
   },
   "devDependencies": {
     "morgan": "^1.6.1",
