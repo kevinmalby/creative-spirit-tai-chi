@@ -5,16 +5,19 @@ let app = require('../../server'),
 	Promise = require('bluebird'),
 	mongoose = Promise.promisifyAll(require('mongoose')),
 	Workshop = mongoose.model('Workshop'),
-	Instructor = mongoose.model('Instructor');
+	Instructor = mongoose.model('Instructor'),
+	Student = mongoose.model('Student');
 
 let workshop,
-	instructor,
-	instructorTwo;
+	instructorOne,
+	instructorTwo,
+	studentOne,
+	studentTwo;
 
 
 describe('Workshop Model Unit Tests:', () => {
 	beforeEach((done) => {
-		instructor = new Instructor({
+		instructorOne = new Instructor({
 			firstName: 'Robin',
 			lastName: 'Malby',
 			email: 'robinmtaichi@gmail.com',
@@ -28,8 +31,34 @@ describe('Workshop Model Unit Tests:', () => {
 			phone: '5555555555',
 			description: 'He makes shoes, he\'s really not qualified for this'
 		});
-		instructor.saveAsync()
-			.then(() => instructorTwo.saveAsync())
+		studentOne = new Student({
+			firstName: 'Err',
+			lastName: 'Buddy',
+			email: '3rrbuddy@yahoo.com',
+			phone: '(555)555-5555',
+			dob: new Date('January 1, 1970'),
+			street: '598 Erry Street',
+			city: 'Erry City',
+			state: 'Ca',
+			zip: 66621,
+			certifications: ['Clubbin', 'Mobbin']
+		});
+		studentTwo = new Student({
+			firstName: 'Velma',
+			lastName: 'Doobiescoo',
+			email: 'jinkies563@gmail.com',
+			phone: '111-555-5555',
+			dob: new Date('December 11, 1982'),
+			street: '123 Getouttaherescoob Lane',
+			city: 'Weirdsville',
+			state: 'Indiana',
+			zip: 696969,
+			certifications: ['Jinky Master', 'Meddling Around']
+		});
+		instructorOne.saveAsync()
+			.then(() => { return instructorTwo.saveAsync() })
+			.then(() => { return studentOne.saveAsync() })
+			.then(() => { return studentTwo.saveAsync() })
 			.then(() => {
 				workshop = new Workshop({
 					title: 'TAI CHI for Energy Part One',
@@ -46,7 +75,8 @@ describe('Workshop Model Unit Tests:', () => {
 					city: 'Pacific Grove',
 					state: 'Ca',
 					zip: 93950,
-					instructors: [instructor, instructorTwo]
+					instructors: [instructorOne, instructorTwo],
+					registeredStudents: [studentOne, studentTwo]
 				});
 				done();
 			})
@@ -75,8 +105,8 @@ describe('Workshop Model Unit Tests:', () => {
 	describe('Testing retrieval', () => {
 		it('Should be able to retrieve a workshop entry', (done) => {
 			workshop.saveAsync()
-				.then(() => Workshop.findOneAsync())
-				.then(done())
+				.then(() => { return Workshop.findOneAsync() })
+				.then(() => done())
 				.catch((err) => should.not.exist(err));
 		});
 
@@ -92,12 +122,25 @@ describe('Workshop Model Unit Tests:', () => {
 						});
 				});
 		});
+
+		it('Should successfully populate the students list', (done) => {
+			workshop.saveAsync()
+				.then(() => {
+					Workshop.findOne({title: 'TAI CHI for Energy Part One'})
+						.populate('registeredStudents')
+						.exec(function(err, wkshp) {
+							should.not.exist(err);
+							(wkshp.registeredStudents[1].fullName).should.equal('Velma Doobiescoo');
+							done();
+						});
+				});
+		});
 	});
 
 	afterEach((done) => {
 		Workshop.removeAsync()
 			.then(() => { return Instructor.removeAsync() })
-			.then(() => { return done() })
+			.then(() => done())
 			.catch((err) => { console.log(err) });
 	});
 });
