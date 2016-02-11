@@ -1,9 +1,9 @@
 'use strict';
 
 let mongoose = require('mongoose'),
-	schema = mongoose.Schema;
+	Schema = mongoose.Schema;
 
-let WorkshopSchema = new schema({
+let WorkshopSchema = new Schema({
 	title: {
 		type: String,
 		required: 'Title is required'
@@ -33,8 +33,8 @@ let WorkshopSchema = new schema({
 	city: String,
 	state: String,
 	zip: Number,
-	instructors: { type: schema.Types.ObjectId, ref: 'Instructor' },
-	registeredStudents: [{ type: schema.Types.ObjectId, ref: 'Student' }]
+	instructors: [{ type: Schema.Types.ObjectId, ref: 'Instructor' }],
+	registeredStudents: [{ type: Schema.Types.ObjectId, ref: 'Student' }]
 });
 
 

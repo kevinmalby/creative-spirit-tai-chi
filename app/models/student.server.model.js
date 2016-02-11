@@ -2,7 +2,7 @@
 
 let mongoose = require('mongoose'),
 	schema = mongoose.Schema,
-	validator = require('validator');
+	regexes = require('../../regex/regexes');
 
 let StudentSchema = new schema({
 	firstName: {
@@ -19,8 +19,7 @@ let StudentSchema = new schema({
 		type: String,
 		validate: [
 			function(email) {
-				let re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-				return re.test(email);
+				return regexes.email.test(email);
 			}, 'Not a valid email address'
 		]
 	},
@@ -28,7 +27,7 @@ let StudentSchema = new schema({
 		type: String,
 		validate: [
 			function(phoneNumber) {
-				return validator.isMobilePhone(phoneNumber, 'en-US');
+				return regexes.phone.test(phoneNumber);
 			}, 'Not a valid phone number'
 		]
 	},
