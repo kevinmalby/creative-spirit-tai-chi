@@ -13,7 +13,7 @@ describe('Instructor Model Unit Tests:', () => {
 			firstName: 'Robin',
 			lastName: 'Malby',
 			email: 'robinmtaichi@gmail.com',
-			phone: '(925) 381-3097',
+			phone: '(555) 555-5555',
 			description: 'She is a Tai Chi and Qi Gong instructor of 12 years'
 		});
 		done();
