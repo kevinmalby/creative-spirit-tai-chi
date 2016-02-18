@@ -2,8 +2,7 @@
 
 let app = require('../../server'),
 	should = require('should'),
-	Promise = require('bluebird'),
-	mongoose = Promise.promisifyAll(require('mongoose')),
+	mongoose = require('mongoose'),
 	Workshop = mongoose.model('Workshop'),
 	Instructor = mongoose.model('Instructor'),
 	Student = mongoose.model('Student');
@@ -55,34 +54,34 @@ describe('Workshop Model Unit Tests:', () => {
 			zip: 696969,
 			certifications: ['Jinky Master', 'Meddling Around']
 		});
-		instructorOne.saveAsync()
-			.then(() => { return instructorTwo.saveAsync() })
-			.then(() => { return studentOne.saveAsync() })
-			.then(() => { return studentTwo.saveAsync() })
-			.then(() => {
-				workshop = new Workshop({
-					title: 'TAI CHI for Energy Part One',
-					subTitle: 'A 2-Day Instructor Certification workshop approved for Continuing Education Units',
-					shortDescription: 'Sun and Chen style Tai Chi combined in this Tai Chi for Health Program. Tai Chi is a safe and effective form of exercise for almost anyone.',
-					fullDescription: 'This is the full description',
-					startDate: new Date('February 7, 2015'),
-					endDate: new Date('February 8, 2015'),
-					fee: 255,
-					recertFee: 105,
-					paymentDueBy: new Date('January 26, 2015'),
-					location: 'Chatauqua Hall',
-					street: '16th and Central Avenue',
-					city: 'Pacific Grove',
-					state: 'Ca',
-					zip: 93950,
-					instructors: [instructorOne, instructorTwo],
-					registeredStudents: [studentOne, studentTwo]
-				});
-				done();
-			})
-			.catch((err) => {
-				console.log(err);
+		instructorOne.save()
+		.then(() => { return instructorTwo.save()})
+		.then(() => { return studentOne.save() })
+		.then(() => { return studentTwo.save() })
+		.then(() => {
+			workshop = new Workshop({
+				title: 'TAI CHI for Energy Part One',
+				subTitle: 'A 2-Day Instructor Certification workshop approved for Continuing Education Units',
+				shortDescription: 'Sun and Chen style Tai Chi combined in this Tai Chi for Health Program. Tai Chi is a safe and effective form of exercise for almost anyone.',
+				fullDescription: 'This is the full description',
+				startDate: new Date('February 7, 2015'),
+				endDate: new Date('February 8, 2015'),
+				fee: 255,
+				recertFee: 105,
+				paymentDueBy: new Date('January 26, 2015'),
+				location: 'Chatauqua Hall',
+				street: '16th and Central Avenue',
+				city: 'Pacific Grove',
+				state: 'Ca',
+				zip: 93950,
+				instructors: [instructorOne, instructorTwo],
+				registeredStudents: [studentOne, studentTwo]
 			});
+			done();
+		})
+		.catch((err) => {
+			console.log(err);
+		});
 	});
 
 	describe('Testing the save method', (done) => {
@@ -104,43 +103,43 @@ describe('Workshop Model Unit Tests:', () => {
 
 	describe('Testing retrieval', () => {
 		it('Should be able to retrieve a workshop entry', (done) => {
-			workshop.saveAsync()
-				.then(() => { return Workshop.findOneAsync() })
-				.then(() => done())
-				.catch((err) => should.not.exist(err));
+			workshop.save()
+			.then(() => { return Workshop.findOne() })
+			.then((wkshp) => {
+				should.exist(wkshp);
+				done();
+			})
+			.catch((err) => should.not.exist(err));
 		});
 
 		it('Should successfully populate the intructors list', (done) => {
-			workshop.saveAsync()
-				.then(() => {
-					Workshop.findOne({title: 'TAI CHI for Energy Part One'})
-						.populate('instructors')
-						.exec(function(err, wkshp) {
-							should.not.exist(err);
-							(wkshp.instructors[0].fullName).should.equal('Robin Malby');
-							done();
-						});
-				});
+			workshop.save()
+			.then(() => { return Workshop.findOne({title: 'TAI CHI for Energy Part One'})
+							.populate('instructors').exec() })
+			.then((wkshp) => {
+				(wkshp.instructors[0].fullName).should.equal('Robin Malby');
+				done();
+			})
+			.catch((err) => should.not.exist(err));
 		});
 
 		it('Should successfully populate the students list', (done) => {
-			workshop.saveAsync()
-				.then(() => {
-					Workshop.findOne({title: 'TAI CHI for Energy Part One'})
-						.populate('registeredStudents')
-						.exec(function(err, wkshp) {
-							should.not.exist(err);
-							(wkshp.registeredStudents[1].fullName).should.equal('Velma Doobiescoo');
-							done();
-						});
-				});
+			workshop.save()
+			.then(() => { return Workshop.findOne({title: 'TAI CHI for Energy Part One'})
+							.populate('registeredStudents').exec() })
+			.then((wkshp) => {
+				(wkshp.registeredStudents[1].fullName).should.equal('Velma Doobiescoo');
+				done();
+			})
+			.catch((err) => should.not.exist(err));
 		});
 	});
 
 	afterEach((done) => {
-		Workshop.removeAsync()
-			.then(() => { return Instructor.removeAsync() })
-			.then(() => done())
-			.catch((err) => { console.log(err) });
+		Workshop.remove()
+		.then(() => { return Instructor.remove() })
+		.then(() => { return Student.remove() })
+		.then(() => done())
+		.catch((err) => { console.log(err) });
 	});
 });

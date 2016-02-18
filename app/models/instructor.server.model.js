@@ -32,6 +32,8 @@ let InstructorSchema = new schema({
 		]
 	},
 	description: String,
+	createdAt: Date,
+	updatedAt: Date
 });
 
 InstructorSchema.virtual('fullName').get(function() {
@@ -40,6 +42,15 @@ InstructorSchema.virtual('fullName').get(function() {
 	var splitName = fullName.split(' ');
 	this.firstName = splitName[0] || '';
 	this.lastName = splitName[1] || '';
+});
+
+InstructorSchema.pre('save', function(next){
+  let now = new Date();
+  this.updatedAt = now;
+  if ( !this.createdAt ) {
+    this.createdAt = now;
+  }
+  next();
 });
 
 InstructorSchema.set('toJSON', { virtuals: true });

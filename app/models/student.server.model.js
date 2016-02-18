@@ -1,10 +1,10 @@
 'use strict';
 
 let mongoose = require('mongoose'),
-	schema = mongoose.Schema,
+	Schema = mongoose.Schema,
 	regexes = require('../../regex/regexes');
 
-let StudentSchema = new schema({
+let StudentSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
@@ -39,11 +39,13 @@ let StudentSchema = new schema({
 	state: String,
 	zip: Number,
 	certifications: [String],
-	paid: [schema.Types.Mixed],
-	registeredFor: [schema.Types.Mixed],
-	educationUnits: [schema.Types.Mixed],
-	workshopsEnrolled: [{ type: schema.Types.ObjectId, ref: 'Workshop' }],
-	classesEnrolled: [{ type: schema.Types.ObjectId, ref: 'Class' }]
+	paid: {},
+	registeredFor: {},
+	educationUnits: {},
+	workshopsEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Workshop' }],
+	classesEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Class' }],
+	createdAt: Date,
+	updatedAt: Date
 });
 
 StudentSchema.virtual('fullName').get(function() {
@@ -52,6 +54,15 @@ StudentSchema.virtual('fullName').get(function() {
 	var splitName = fullName.split(' ');
 	this.firstName = splitName[0] || '';
 	this.lastName = splitName[1] || '';
+});
+
+StudentSchema.pre('save', function(next){
+  let now = new Date();
+  this.updatedAt = now;
+  if ( !this.createdAt ) {
+    this.createdAt = now;
+  }
+  next();
 });
 
 StudentSchema.set('toJSON', { virtuals: true });

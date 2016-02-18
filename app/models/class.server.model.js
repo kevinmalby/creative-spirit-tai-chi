@@ -33,8 +33,18 @@ let ClassSchema = new schema({
 	state: String,
 	zip: Number,
 	instructors: [{ type: Schema.Types.ObjectId, ref: 'Instructor' }],
-	registeredStudents: [{ type: Schema.Types.ObjectId, ref: 'Student' }]
+	registeredStudents: [{ type: Schema.Types.ObjectId, ref: 'Student' }],
+	createdAt: Date,
+	updatedAt: Date
 });
 
+ClassSchema.pre('save', function(next){
+  let now = new Date();
+  this.updatedAt = now;
+  if ( !this.createdAt ) {
+    this.createdAt = now;
+  }
+  next();
+});
 
 mongoose.model('Class', ClassSchema);

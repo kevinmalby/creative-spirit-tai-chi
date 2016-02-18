@@ -69,16 +69,15 @@ describe('Instructor Model Unit Tests:', () => {
 
 	describe('Testing retrieval', () => {
 		it('Should be able to retrieve an instructor entry', () => {
-			instructor.save();
-			Instructor.findOne({}, (err) => {
-				should.not.exist(err);
-			});
+			instructor.save()
+			.then(() => { return Instructor.findOne })
+			.catch((err) => should.not.exist(err));
 		});
 	});
 
 	afterEach((done) => {
-		Instructor.remove({}, () => {
-			done();
-		});
+		Instructor.remove()
+		.then(() => done())
+		.catch((err) => should.not.exist(err));
 	});
 });
