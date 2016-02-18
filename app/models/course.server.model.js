@@ -1,9 +1,9 @@
 'use strict';
 
 let mongoose = require('mongoose'),
-	schema = mongoose.Schema;
+	Schema = mongoose.Schema;
 
-let ClassSchema = new schema({
+let CourseSchema = new Schema({
 	title: {
 		type: String,
 		required: 'Title is required'
@@ -14,10 +14,26 @@ let ClassSchema = new schema({
 	shortDescription: String,
 	fullDescription: String,
 	startDate: {
-		type: Date
+		type: Date,
+		validate: [
+			function(startDate) {
+				if (this.endDate) {
+					return this.startDate < this.endDate;
+				}
+				return true;
+			}, 'Start date must be before end date'
+		]
 	},
 	endDate: {
-		type: Date
+		type: Date,
+		validate: [
+			function(endDate) {
+				if (this.startDate) {
+					return this.endDate > this.startDate;
+				}
+				return true;
+			}, 'End date must be after start date'
+		]
 	},
 	meetingDays: [String],
 	blackoutDates: [Date],
@@ -38,7 +54,7 @@ let ClassSchema = new schema({
 	updatedAt: Date
 });
 
-ClassSchema.pre('save', function(next){
+CourseSchema.pre('save', function(next){
   let now = new Date();
   this.updatedAt = now;
   if ( !this.createdAt ) {
@@ -47,4 +63,4 @@ ClassSchema.pre('save', function(next){
   next();
 });
 
-mongoose.model('Class', ClassSchema);
+mongoose.model('Course', CourseSchema);
